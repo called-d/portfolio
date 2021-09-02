@@ -16,10 +16,12 @@ class ArticleTest extends TestCase
     {
         $article = Article::factory()->create();
 
+        $this->assertNotNull(Article::draft()->find($article->id), 'just created article is draft');
         $this->assertNull(Article::published()->find($article->id), 'default article is private.');
 
         $article->publish();
 
+        $this->assertNull(Article::draft()->find($article->id), 'published article is not draft.');
         $this->assertNotNull(Article::published()->find($article->id), 'published article is published');
     }
 }
