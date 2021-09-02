@@ -1,7 +1,8 @@
 <template>
-    <section role="feed" :aria-busy="isBusy" tabindex="0" v-on="keyboardEvents">
+    <section role="feed" :aria-busy="isBusy" tabindex="0" v-on="keyboardEvents"
+             class="portfolio_slider">
         <article v-for="(article, i) in articles" :key="article.id"
-                 :id="article.slug" class="portfolio_article"
+                 :id="article.slug" class="portfolio_article card" :style="transformation(i)"
                  tabindex="-1"
                  :aria-posinset="i + 1" :aria-setsize="articles.length">
                  {{ i == selectedIndex ? '★' : '' }} {{ article.title }}
@@ -47,9 +48,25 @@ export default defineComponent({
             focus()
         }
 
+        // selectedArticleが0になるような -1 からのインデックス
+        const ringIndexes = computed(() => props.articles.map((_, i) => (props.articles.length + i + -selectedIndex.value + 1) % props.articles.length - 1))
+
         return {
             isBusy,
             selectedIndex,
+            transformation (i: number) {
+                let zIndex: number
+                let pos = ringIndexes.value[i]
+                let offsetX = (pos <= 0 ? pos : pos + 40) * 10 / props.articles.length // TODO 本当に 10 なのかは議論の余地が
+
+                zIndex = 0
+                console.log({ zIndex, offsetX })
+                return {
+                    'zIndex': 5 + pos,
+                    '--offsetX': offsetX + '%',
+                    'opacity': (pos === -1 || pos === props.articles.length - 2) ? 0.3 : 1.0,
+                }
+            },
             keyboardEvents: {
                 keydown: (e: KeyboardEvent) => {
                     switch (e.code) {
@@ -93,7 +110,30 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.portfolio_article {
-    &.hidden { display: none; }
+.portfolio {
+    &_slider {
+        position: relative;
+        overflow-x: hidden;
+        width: 100vw;
+        height: 80vh;
+    }
+    &_article {
+        &.hidden { display: none; }
+
+        &.card {
+            position: absolute;
+            left: 50%;
+
+            width: 65%;
+            border: 3px solid #999;
+
+            transition-property: z-index, transform;
+            transition-duration: 300ms;
+            transition-timing-function: step-end, ease;
+            transform: translateX(calc(-50% + var(--offsetX, 0%)));
+
+            background: white;
+        }
+    }
 }
 </style>
