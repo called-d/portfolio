@@ -1,6 +1,6 @@
 <template>
     <section role="feed" :aria-busy="isBusy" tabindex="0" v-on="keyboardEvents"
-             class="portfolio_slider">
+             class="portfolio_slider" :style="{ '--articlesCount': articles.length }">
         <article v-for="(article, i) in articles" :key="article.id"
                  :id="article.slug" class="portfolio_article card" :style="transformation(i)"
                  tabindex="-1"
@@ -8,6 +8,11 @@
                  <h4>{{ article.title }}</h4>
                  <div>{{ article.content }}</div>
         </article>
+        <svg aria-hidden="true" class="ui-img img-binder"
+             viewBox="">
+        </svg>
+        <button type="button" class="ui"></button>
+        <button type="button" class="ui"></button>
     </section>
 </template>
 
@@ -116,6 +121,13 @@ export default defineComponent({
         overflow-x: hidden;
         width: 100vw;
         height: 80vh;
+
+        .ui, .ui-img {
+            z-index: calc(var(--articlesCount, 0) + 5);
+        }
+        .ui {
+            user-select: none;
+        }
     }
     &_article {
         &.hidden { display: none; }
