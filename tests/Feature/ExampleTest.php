@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
@@ -14,6 +16,8 @@ class ExampleTest extends TestCase
      */
     public function test_example()
     {
+        Auth::login(User::where('is_admin', false)->firstOrFail());
+
         $response = $this->get('/');
 
         $response->assertStatus(200);
