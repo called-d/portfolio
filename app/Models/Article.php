@@ -27,4 +27,22 @@ class Article extends Model
         'metadata' => '{
         }',
     ];
+
+    //==== 公開/非公開
+
+    /**
+     * @param mixed|null $on
+     */
+    public function publish($on = null)
+    {
+        $this->update(['published_at' => Date::parse($on)]);
+    }
+
+    /**
+     * @param mixed $on いつの時点で公開？　str, datetime or null
+     */
+    public function scopePublished(Builder $query, $on = null)
+    {
+        return $query->where('published_at', '<=', Date::parse($on));
+    }
 }
