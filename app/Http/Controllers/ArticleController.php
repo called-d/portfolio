@@ -4,17 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 記事を表示
+     * （ログインしていれば下書きも出す）
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        return view('articles.index', [
+            'articles' => Article::query()
+                ->when(Auth::guest(), fn($q) => $q->published())
+                ->get(),
+        ]);
     }
 
     /**
