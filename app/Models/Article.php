@@ -45,4 +45,9 @@ class Article extends Model
     {
         return $query->where('published_at', '<=', Date::parse($on));
     }
+
+    public function scopeDraft(Builder $query, $on = null)
+    {
+        return $query->whereNull('published_at')->orWhere('published_at', '>', Date::parse($on));
+    }
 }
