@@ -5,8 +5,8 @@
                  :id="article.slug" class="portfolio_article card" :style="transformation(i)"
                  tabindex="-1"
                  :aria-posinset="i + 1" :aria-setsize="articles.length">
-                 {{ i == selectedIndex ? '★' : '' }} {{ article.title }}
-                 {{ article.content }}
+                 <h4>{{ article.title }}</h4>
+                 <div>{{ article.content }}</div>
         </article>
     </section>
 </template>
