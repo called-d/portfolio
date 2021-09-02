@@ -14,6 +14,9 @@
         </style>
 
         @stack('styles')
+        @section('main-scripts')
+            <script src="/js/app.js" defer></script>
+        @show
     </head>
 
     <body class="antialiased">
