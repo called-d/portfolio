@@ -18,7 +18,7 @@ class ArticleController extends Controller
     {
         return view('articles.index', [
             'articles' => Article::query()
-                ->when(Auth::guest(), fn($q) => $q->published())
+                ->when(!optional(Auth::user())->is_admin, fn($q) => $q->published())
                 ->get(),
         ]);
     }
