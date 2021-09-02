@@ -19,7 +19,7 @@ class CreateArticlesTable extends Migration
             $table->string('title');
             $table->string('thumbnail_path')->nullable();
             $table->timestamp('published_at')->nullable();
-            $table->json('metadata')->default('{}');
+            $table->json('metadata');
             $table->text('content');
             $table->timestamps();
         });
