@@ -83,35 +83,42 @@ export default defineComponent({
             },
             keyboardEvents: {
                 keydown: (e: KeyboardEvent) => {
+                    const prevent = () => {
+                        e.stopPropagation()
+                        e.preventDefault()
+                        return false;
+                    }
                     switch (e.code) {
                         case "ArrowDown": // fallthrough
                         case "ArrowRight":
                             if (e.ctrlKey || e.metaKey) {
                                 selectLast()
-                                break
+                                return prevent()
                             }
                             // fallthrough
                         case "PageDown":
                             selectNext()
-                            break
+                            return prevent()
                         case "ArrowUp": // fallthrough
                         case "ArrowLeft":
                             if (e.ctrlKey || e.metaKey) {
                                 selectFirst()
-                                break
+                                return prevent()
                             }
                             // fallthrough
                         case "PageUp":
                             selectPrev()
-                            break
+                            return prevent()
                         case "End":
                             if (e.ctrlKey || e.metaKey) {
                                 selectLast()
+                                return prevent()
                             }
                             break
                         case "Home":
                             if (e.ctrlKey || e.metaKey) {
                                 selectFirst()
+                                return prevent()
                             }
                             break
                         default:
