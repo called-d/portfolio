@@ -5,9 +5,9 @@
                  :id="article.slug" class="portfolio_article card" :class="classes(i)" :style="transformation(i)"
                  tabindex="-1"
                  :aria-posinset="i + 1" :aria-setsize="articles.length">
-                 <h4>{{ article.title }}</h4>
-                 <div>{{ article.content }}</div>
-                 <div class="truncated-fade" aria-hidden="true"></div>
+            <slot :article="article" :i="i"></slot>
+            <div class="truncated-fade" aria-hidden="true"></div>
+            <slot name="card_ui" :article="article" :i="i"></slot>
         </article>
         <svg aria-hidden="true" class="ui-img img-binder"
              viewBox="-50 -34 100 60">
@@ -17,8 +17,8 @@
              viewBox="-50 -34 100 60">
             <path d="M34,24 m3,-4 l10,-40 h-16" fill="none" stroke="black" stroke-width="3"></path>
         </svg>
-        <button type="button" class="ui"></button>
-        <button type="button" class="ui"></button>
+        <button type="button" class="ui button-prev" @click="selectPrev">◀</button>
+        <button type="button" class="ui button-next" @click="selectNext">▶</button>
     </section>
 </template>
 
@@ -65,11 +65,14 @@ export default defineComponent({
         return {
             isBusy,
             selectedIndex,
+            selectNext,
+            selectPrev,
             classes (i: number) {
                 let pos = ringIndexes.value[i]
                 return [
                     pos <= 0 ? 'out-of-binder' : 'in-binder',
                     pos === -1 ? 'will-animate' : '', // 逆向き時にちょっと変なので目立たなくしたい
+                    pos === 0 ? 'selected' : '',
                 ];
             },
             transformation (i: number) {
@@ -156,6 +159,22 @@ export default defineComponent({
             right: 0;
             max-width: 100vw;
         }
+
+        .button-next, .button-prev {
+            // reset (何回も出てくるなら util.scss に移動)
+            background-color: transparent;
+            border: none;
+            outline: none;
+            appearance: none;
+
+            padding: 1em;
+            cursor: pointer;
+            position: absolute;
+            top: 50%; // 上下中央
+            transform: translateY(-50%);
+        }
+        .button-next { right: 0; }
+        .button-prev { left: 0; }
     }
     &_article {
         &.hidden { display: none; }
