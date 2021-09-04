@@ -69,7 +69,7 @@ export default defineComponent({
                 let pos = ringIndexes.value[i]
                 return [
                     pos <= 0 ? 'out-of-binder' : 'in-binder',
-                    pos === -1 || pos === props.articles.length - 2 ? 'will-animate' : '',
+                    pos === -1 ? 'will-animate' : '', // 逆向き時にちょっと変なので目立たなくしたい
                 ];
             },
             transformation (i: number) {
