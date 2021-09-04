@@ -9,7 +9,12 @@
                  <div>{{ article.content }}</div>
         </article>
         <svg aria-hidden="true" class="ui-img img-binder"
-             viewBox="">
+             viewBox="-50 -50 100 100">
+            <path d="M-48,-24 l12,48 h70 l-12,-48 h-35 l-7,-7 h-25 z" fill="none" stroke="black" stroke-width="3"></path>
+        </svg>
+        <svg aria-hidden="true" class="ui-img img-binder" style="z-index: 2"
+             viewBox="-50 -50 100 100">
+            <path d="M34,24 m3,-4 l10,-40 h-16" fill="none" stroke="black" stroke-width="3"></path>
         </svg>
         <button type="button" class="ui"></button>
         <button type="button" class="ui"></button>
@@ -123,6 +128,7 @@ export default defineComponent({
         height: 80vh;
 
         .ui, .ui-img {
+            position: absolute;
             z-index: calc(var(--articlesCount, 0) + 5);
         }
         .ui {
