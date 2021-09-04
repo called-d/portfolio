@@ -194,7 +194,6 @@ export default defineComponent({
 
             z-index: calc(5 + var(--pos));
             --baseOffsetY: calc((var(--pos) + 1) * 10vh / var(--articlesCount));
-            --baseOffsetY: 0px;
             --Y: var(--baseOffsetY);
             &.out-of-binder {
                 --offsetX: calc(var(--pos) * 10% / var(--articlesCount));
