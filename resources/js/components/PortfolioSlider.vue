@@ -7,6 +7,7 @@
                  :aria-posinset="i + 1" :aria-setsize="articles.length">
                  <h4>{{ article.title }}</h4>
                  <div>{{ article.content }}</div>
+                 <div class="truncated-fade" aria-hidden="true"></div>
         </article>
         <svg aria-hidden="true" class="ui-img img-binder"
              viewBox="-50 -34 100 60">
@@ -159,6 +160,16 @@ export default defineComponent({
     &_article {
         &.hidden { display: none; }
 
+        .truncated-fade {
+            position: absolute;
+            bottom: 0;
+            height: 4em;
+            width: 100%;
+            background: linear-gradient(0, white 50%, rgba(255, 255, 255, 0));
+            user-select: none;
+            pointer-events: none;
+        }
+
         &.card {
             position: absolute;
             left: 50%;
@@ -174,6 +185,8 @@ export default defineComponent({
             }
             width: var(--cardWidth);
             height: var(--cardHeight);
+
+            overflow: hidden;
 
             transition-property: z-index, transform;
             transition-duration: 300ms;
