@@ -146,6 +146,7 @@ export default defineComponent({
         @include m('pc') {
             --sliderWidth: 900px;
             margin: 3em auto; // マージン
+            overflow-x: inherit;
         }
         margin: 1em auto; // WIP マージンはコンポーネントの外に持たせたいけどここでしか使わないからそのまま書く
         height: var(--sliderHeight);
@@ -182,6 +183,10 @@ export default defineComponent({
         }
         .button-next { right: 0; }
         .button-prev { left: 0; }
+        @include m('pc') {
+            .button-next { right: -3em; }
+            .button-prev { left: -3em; }
+        }
     }
     &_article {
         &.hidden { display: none; }
