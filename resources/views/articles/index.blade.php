@@ -13,6 +13,15 @@
     .selected .card-body-link {
         display: inline;
     }
+    .portfolio_article.card {
+        padding: 0 1em;
+    }
+    .portfolio_article.large_card {
+        max-width: 900px;
+        margin: auto;
+        margin-bottom: 5em;
+        padding: 0 1em;
+    }
 </style>
 @endpush
 
