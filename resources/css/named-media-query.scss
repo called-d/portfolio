@@ -1,0 +1,10 @@
+$devices: (
+    "pc": '(min-width: 900px)',
+    "mobile": '(max-width: 899px)',
+);
+
+@mixin m($device) {
+    @media screen and #{map-get($devices, $device)} {
+        @content
+    }
+}
