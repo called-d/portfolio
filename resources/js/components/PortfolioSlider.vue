@@ -2,18 +2,18 @@
     <section role="feed" :aria-busy="isBusy" tabindex="0" v-on="keyboardEvents"
              class="portfolio_slider" :style="{ '--articlesCount': articles.length }">
         <article v-for="(article, i) in articles" :key="article.id"
-                 :id="article.slug" class="portfolio_article card" :style="transformation(i)"
+                 :id="article.slug" class="portfolio_article card" :class="classes(i)" :style="transformation(i)"
                  tabindex="-1"
                  :aria-posinset="i + 1" :aria-setsize="articles.length">
                  <h4>{{ article.title }}</h4>
                  <div>{{ article.content }}</div>
         </article>
         <svg aria-hidden="true" class="ui-img img-binder"
-             viewBox="-50 -50 100 100">
+             viewBox="-50 -34 100 60">
             <path d="M-48,-24 l12,48 h70 l-12,-48 h-35 l-7,-7 h-25 z" fill="none" stroke="black" stroke-width="3"></path>
         </svg>
         <svg aria-hidden="true" class="ui-img img-binder" style="z-index: 2"
-             viewBox="-50 -50 100 100">
+             viewBox="-50 -34 100 60">
             <path d="M34,24 m3,-4 l10,-40 h-16" fill="none" stroke="black" stroke-width="3"></path>
         </svg>
         <button type="button" class="ui"></button>
@@ -64,17 +64,17 @@ export default defineComponent({
         return {
             isBusy,
             selectedIndex,
-            transformation (i: number) {
-                let zIndex: number
+            classes (i: number) {
                 let pos = ringIndexes.value[i]
-                let offsetX = (pos <= 0 ? pos : pos + 40) * 10 / props.articles.length // TODO 本当に 10 なのかは議論の余地が
-
-                zIndex = 0
-                console.log({ zIndex, offsetX })
+                return [
+                    pos <= 0 ? 'out-of-binder' : 'in-binder',
+                    pos === -1 || pos === props.articles.length - 2 ? 'will-animate' : '',
+                ];
+            },
+            transformation (i: number) {
+                let pos = ringIndexes.value[i]
                 return {
-                    'zIndex': 5 + pos,
-                    '--offsetX': offsetX + '%',
-                    'opacity': (pos === -1 || pos === props.articles.length - 2) ? 0.3 : 1.0,
+                    '--pos': pos,
                 }
             },
             keyboardEvents: {
@@ -120,19 +120,40 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@import '../../css/named-media-query';
+
 .portfolio {
     &_slider {
+        --sliderHeight: 80vh;
+        --sliderWidth: 100vw;
+        --binderHeight: 30vh;
+        --binderWidth: 50vh;
+        --outY: calc(var(--binderHeight) * 0.8);
+
         position: relative;
         overflow-x: hidden;
-        width: 100vw;
-        height: 80vh;
+        @include m('pc') {
+            --sliderWidth: 900px;
+            margin: 3em auto; // マージン
+        }
+        margin: 1em auto; // WIP マージンはコンポーネントの外に持たせたいけどここでしか使わないからそのまま書く
+        height: var(--sliderHeight);
+        width: var(--sliderWidth);
 
         .ui, .ui-img {
             position: absolute;
-            z-index: calc(var(--articlesCount, 0) + 5);
+            z-index: calc(var(--articlesCount, 0) + 10);
         }
         .ui {
             user-select: none;
+        }
+
+        .img-binder {
+            height: calc(var(--binderHeight));
+
+            bottom: 0;
+            right: 0;
+            max-width: 100vw;
         }
     }
     &_article {
@@ -142,13 +163,42 @@ export default defineComponent({
             position: absolute;
             left: 50%;
 
-            width: 65%;
             border: 3px solid #999;
+
+            --cardWidth: 65%;
+            --cardHeight: 250px;
+            @include m('pc') {
+                --cardWidth: 40%;
+                --cardHeight: 35vh;
+                min-height: 250px;
+            }
+            width: var(--cardWidth);
+            height: var(--cardHeight);
 
             transition-property: z-index, transform;
             transition-duration: 300ms;
             transition-timing-function: step-end, ease;
-            transform: translateX(calc(-50% + var(--offsetX, 0%)));
+
+            z-index: calc(5 + var(--pos));
+            --baseOffsetY: calc((var(--pos) + 1) * 10vh / var(--articlesCount));
+            --baseOffsetY: 0px;
+            --Y: var(--baseOffsetY);
+            &.out-of-binder {
+                --offsetX: calc(var(--pos) * 10% / var(--articlesCount));
+            }
+            &.in-binder {
+                --offsetX: calc(var(--sliderWidth) / 2 - 50% + (-1 * var(--articlesCount) + var(--pos)) * 10% / var(--articlesCount));
+
+                // + 2 は-1始まりだから, 0オリジンだから
+                // -2vh はbinder の下の線からの浮き
+                --baseY: calc(var(--sliderHeight) - var(--cardHeight));
+                --offsetY: calc(-2vh + ((var(--pos) + 2) - var(--articlesCount)) * 10vh / var(--articlesCount));
+                --Y: calc(var(--baseY) + var(--offsetY));
+            }
+            &.will-animate {
+                opacity: 0.3;
+            }
+            transform: translate(calc(-50% + var(--offsetX, 0%)), var(--Y));
 
             background: white;
         }
