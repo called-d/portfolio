@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Storage;
 
 class Article extends Model
 {
@@ -27,6 +28,15 @@ class Article extends Model
         'metadata' => '{
         }',
     ];
+
+    protected $appends = [
+        'thumbnail_url',
+    ];
+
+    public function getThumbnailUrlAttribute()
+    {
+        return optional($this->thumbnail_path, fn($path) => Storage::url($path));
+    }
 
     //==== 公開/非公開
 

@@ -5,6 +5,8 @@
                  :id="article.slug" class="portfolio_article card" :class="classes(i)" :style="transformation(i)"
                  tabindex="-1"
                  :aria-posinset="i + 1" :aria-setsize="articles.length">
+            <div class="card_background" v-if="article.thumbnail_url"
+                 aria-hidden="true" :style="{ '--thumbnail_url': `url(${article.thumbnail_url})` }"></div>
             <slot :article="article" :i="i"></slot>
             <div class="truncated-fade" aria-hidden="true"></div>
             <slot name="card_ui" :article="article" :i="i"></slot>
@@ -218,6 +220,15 @@ export default defineComponent({
             height: var(--cardHeight);
 
             overflow: hidden;
+            .card_background {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                margin: 0 -1em;
+                background-image: var(--thumbnail_url);
+                opacity: 0.12;
+                background-repeat: no-repeat;
+            }
 
             transition-property: z-index, transform;
             transition-duration: 300ms;
