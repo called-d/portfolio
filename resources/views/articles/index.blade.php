@@ -38,10 +38,14 @@
     </portfolio-slider>
 
     @foreach($articles as $article)
-    <article class="portfolio_article large_card" id="fallback__{{ $article->slug }}">
+    <article class="portfolio_article large_card" id="fallback__{{ $article->slug }}" v-once>
         <h4>{{ $article->title }}</h4>
         @isset($article->metadata['script']){!! $article->metadata['script'] !!}@endisset
-        <div>{{ $article->content }}</div>
+        @isset($article->metadata['md'])
+            <div class="article_content" data-is-md v-once><pre>{{ $article->content }}</pre></div>
+        @else
+            <div class="article_content">{{ $article->content }}</div>
+        @endisset
     </article>
     @endforeach
 </div>
