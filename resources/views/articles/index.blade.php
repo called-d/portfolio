@@ -36,14 +36,13 @@
             <a class="card-body-link" :href="`#fallback__${article.slug}`">▼</a>
         </template>
     </portfolio-slider>
-</div>
 
-<!-- フォールバック用非js -->
-
-@foreach($articles as $article)
+    @foreach($articles as $article)
     <article class="portfolio_article large_card" id="fallback__{{ $article->slug }}">
         <h4>{{ $article->title }}</h4>
+        @isset($article->metadata['script']){!! $article->metadata['script'] !!}@endisset
         <div>{{ $article->content }}</div>
     </article>
-@endforeach
+    @endforeach
+</div>
 @endsection
