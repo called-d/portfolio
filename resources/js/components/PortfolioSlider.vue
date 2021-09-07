@@ -198,6 +198,7 @@ export default defineComponent({
             bottom: 0;
             height: 4em;
             width: 100%;
+            margin: 0 -1em;
             background: linear-gradient(0, white 50%, rgba(255, 255, 255, 0));
             user-select: none;
             pointer-events: none;
