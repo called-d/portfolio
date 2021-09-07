@@ -19,6 +19,7 @@ class ArticleController extends Controller
         return view('articles.index', [
             'articles' => Article::query()
                 ->when(!optional(Auth::user())->is_admin, fn($q) => $q->published())
+                ->latest('published_at')
                 ->get(),
         ]);
     }
